@@ -8,6 +8,7 @@ import './App.css';
 
 function App() {
   const [countries, setCountries] = useState([]);
+  const [country, setCountry] = useState([]);
 
   // https://disease.sh/v3/covid-19/countries
 
@@ -17,16 +18,22 @@ function App() {
       await fetch("https://disease.sh/v3/covid-19/countries")
         .then((response) => response.json())
         .then((data) => {
-          const countries = data.map((country) => (
-            {
-              name: country.country, // United States, United Kingdom
-              value: country.countryInfo.iso2, // UK, USA, FR
-            }));
+          const countries = data.map((country) => ({
+            name: country.country, // United States, United Kingdom
+            value: country.countryInfo.iso2, // UK, USA, FR
+          }));
           setCountries(countries);
         })
     };
     getCountriesData();
   }, []);
+
+  const onCountryChange = (event) => {
+    const countryCode = event.target.value;
+    setCountry(countryCode);
+  };
+
+
 
 
   return (
@@ -36,28 +43,19 @@ function App() {
         <FormControl className="app__dropdown">
           <Select
             variant="outlined"
-            value="abc"
+            onChange={onCountryChange}
+            value={country}
           >
-            {
-              /* Loop through all the countries and show a drop-down
-                list of all the options
-              */
-            }
-
-            {
-              countries.map(country => (
-                <MenuItem value={country.value}>{country.name}</MenuItem>
-              ))
-            }
-
-            {/* <MenuItem value="worldwide">Worldwide</MenuItem>
-            <MenuItem value="worldwide">Option 2</MenuItem>
-            <MenuItem value="worldwide">Worldwde</MenuItem>
-            <MenuItem value="worldwide">Worldwde</MenuItem> */}
+            <MenuItem value="worldwide">Worldwide</MenuItem>
+            {countries.map(country => (
+              <MenuItem value={country.value}>{country.name}</MenuItem>
+            ))}
           </Select>
         </FormControl>
       </div>
+      <div className="app__stats">
 
+      </div>
 
     </div>
   );
